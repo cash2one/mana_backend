@@ -13,7 +13,7 @@ CONF = mana_conf.GetConf()
 from mana_public import ALARM_QUEUE
 
 def alarm():
-    LOG.info("Begin to alarm thread")
+    LOG.info("Begin alarm thread")
     while True:
         if not ALARM_QUEUE.empty():
             msg_body = ALARM_QUEUE.get()
@@ -36,7 +36,8 @@ def send_email(msg_body):
     email_port = CONF.get('email_port')
     sender = CONF.get('email_sender')
     sender_pwd = CONF.get('email_sender_pwd')
-    receivers = CONF.get('email_receiver')
+    #receivers = CONF.get('email_receiver')
+    receivers = msg_body.contacts.get("email_receiver")
     try:
         msg = "报警模块:%s<br> 异常数据值:%s%s<br>报警区域:%s<br>主机名:%s<br>主机id:%s<br>所属项目:%s<br>所属用户:%s<br>设备名称:%s<br>"\
                     %(msg_body.alarm_obj, msg_body.max_data, msg_body.unit, msg_body.region, msg_body.instance_name,\
@@ -54,7 +55,8 @@ def send_phone_message(msg_body):
     gametype=CONF.get('phone_gametype')
     priority=CONF.get('phone_priority')
     acttype=CONF.get('phone_acttype')
-    receivers=CONF.get('phone_receiver')
+    #receivers=CONF.get('phone_receiver')
+    receivers = msg_body.contacts.get("phone_receiver")
     try:
         msg = "报警模块:%s,区域:%s,项目:%s,名称:%s,数据:%s%s"%(msg_body.alarm_obj, msg_body.region,\
                 msg_body.project, msg_body.device_name, msg_body.max_data, msg_body.unit)

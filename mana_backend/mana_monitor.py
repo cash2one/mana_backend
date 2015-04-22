@@ -13,7 +13,7 @@ from mana_public import data_item, msg_item
 
 
 def monitor():
-    LOG.info("Begin to monitor thread")
+    LOG.info("Begin monitor thread")
     while True:
         if not DATA_QUEUE.empty():
             item= DATA_QUEUE.get()
@@ -23,9 +23,9 @@ def monitor():
 def _monitor(data_item):
     datas = data_item.data
     for data in datas:
-        check_data(data_item.instance, data, data_item.alarm_obj, data_item.threshold, data_item.region)
+        check_data(data_item.instance, data, data_item.alarm_obj, data_item.threshold, data_item.region, data_item.contacts)
 
-def check_data(instance, data, alarm_obj, threshold, region):
+def check_data(instance, data, alarm_obj, threshold, region, contacts):
     try:
         bodys = data.get('data')
         if bodys == []:
@@ -52,7 +52,7 @@ def check_data(instance, data, alarm_obj, threshold, region):
                 if unit == 'B/s':
                     max_data = round((max_data * 8 / (1024 * 1024)), 2)  
                     unit = 'Mbits'
-                msg_body = msg_item(alarm_obj, instance_id, instance_name, project, user, device_name, max_data, unit, region)
+                msg_body = msg_item(alarm_obj, instance_id, instance_name, project, user, device_name, max_data, unit, region, contacts)
                 ALARM_QUEUE.put(msg_body)
                 return True
     except Exception, e:

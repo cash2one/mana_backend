@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 #coding: utf-8
 
-import time
 import simplejson
 import eventlet
 
@@ -14,140 +13,30 @@ CONF = mana_conf.GetConf()
 
 from mana_public import DATA_QUEUE
 from mana_public import data_item
+from mana_public import period_task
 
-def collection():
+def collection(name, interval):
     pool = eventlet.GreenPool()
-    interval = CONF.get('cycletime')
-    LOG.info("Begin to get collection data thread,cycletime is %ss" %interval)
-    while True:
-        try:
-            time_pre = time.time()
-            _collection(pool)
-            pool.waitall()
-            time_now = time.time()
-            monitor_time = time_now - time_pre
-            if monitor_time < interval:
-                LOG.info("Get data time = %ss, DATA_QUEUE's size = %s" %(monitor_time,DATA_QUEUE.qsize()))
-                time.sleep(interval + time_pre - time_now)
-            else:
-                LOG.warn("Get data use too long time = %ss,  DATA_QUEUE's size = %s" %(monitor_time,DATA_QUEUE.qsize()))
-        except Exception, e:
-            LOG.error(e)
+    LOG.info("Begin collection_%s thread,cycletime is %ss" %(name, interval))
+    task  = period_task(name, interval)
+    task.set_fun(period_run, pool, name)
+    task.run()
 
-def _collection(pool):
-    try:
-        regions = CONF.get('regions')
-        for region in regions:
-            instances = get_instances_from_api(region)
-            for instance in instances:
-                _collection_per_instance(region, instance, pool)
-    except Exception, e:
-        LOG.error(e)
+def period_run(pool, name):
+    _collection(pool, name)
+    pool.waitall()
 
-def _collection_per_instance(region, instance, pool):
-    try:
-        for (alarm_obj, thd) in CONF.get('alarm_list'):
-            threshold = float(thd) 
-            pool.spawn_n(_collection_datas, region, instance, alarm_obj, threshold)
-    except Exception, e:
-        LOG.error(e) 
+def _collection(pool, name):
+    tasks = get_task()
+    for task in tasks:
+        pool.spawn_n(hello, name)
 
-def get_instances_from_api(region):
-    url = CONF.get('url').get('get_all_instance_url') %region
-    api_host = CONF.get('api_host')
-    api_port = CONF.get('api_port')
-    try:
-        httpclient = HttpCon(api_host, api_port, url, "GET")
-        body = httpclient.get()
-        if body:
-            instances = simplejson.loads(body).get('data')
-    except Exception, e:
-        LOG.error(e)
-        return None
-    return instances 
+def get_task():
+    return [1,2,3,4]
 
-def _collection_datas(region, instance, alarm_obj, threshold):
-    instance_id = instance.get('instance_id')
-    url = CONF.get('url').get('get_metric') %(region, alarm_obj, instance_id)
-    api_host = CONF.get('api_host')
-    api_port = CONF.get('api_port')
-    try:
-        httpclient = HttpCon(api_host, api_port, url, "POST")
-        body = httpclient.get()
-        if body:
-            data = simplejson.loads(body)
-            item = data_item(instance, alarm_obj , threshold, region, data)
-            DATA_QUEUE.put(item)
-    except Exception, e:
-        LOG.error(e)
+def hello(name):
+    LOG.info("get the data, i am %s thread!!!"%name)
 
-"""
-def collection():
-    interval = CONF.get('cycletime')
-    LOG.info("Begin to get collection data thread,cycletime is %ss" %interval)
-    while True:
-        try:
-            time_pre = time.time()
-            _collection()
-            time_now = time.time()
-            monitor_time = time_now - time_pre
-            if monitor_time < interval:
-                LOG.info("Get data time = %ss, DATA_QUEUE's size = %s" %(monitor_time,DATA_QUEUE.qsize()))
-                time.sleep(interval + time_pre - time_now)
-            else:
-                LOG.warn("Get data use too long time = %ss,  DATA_QUEUE's size = %s" %(monitor_time,DATA_QUEUE.qsize()))
-        except Exception, e:
-            LOG.error(e)
-
-def _collection():
-    try:
-        regions = CONF.get('regions')
-        for region in regions:
-            instances = get_instances_from_api(region)
-            for instance in instances:
-                get_datas(region, instance)
-    except Exception, e:
-        LOG.error(e)
-
-def get_datas(region, instance):
-    try:
-        for (alarm_obj, thd) in CONF.get('alarm_list'):
-            instance_id = instance.get('instance_id')
-            datas = get_datas_from_api(region, instance_id, alarm_obj)
-            threshold = float(thd) 
-            item = data_item(instance, alarm_obj , threshold, region, datas)
-            DATA_QUEUE.put(item)
-    except Exception, e:
-        LOG.error(e) 
-
-def get_instances_from_api(region):
-    url = CONF.get('url').get('get_all_instance_url') %region
-    api_host = CONF.get('api_host')
-    api_port = CONF.get('api_port')
-    try:
-        httpclient = HttpCon(api_host, api_port, url, "GET")
-        body = httpclient.get()
-        if body:
-            instances = simplejson.loads(body).get('data')
-    except Exception, e:
-        LOG.error(e)
-        return NULL
-    return instances 
-
-def get_datas_from_api(region, instance, alarm_obj):
-    url = CONF.get('url').get('get_metric') %(region, alarm_obj, instance)
-    api_host = CONF.get('api_host')
-    api_port = CONF.get('api_port')
-    try:
-        httpclient = HttpCon(api_host, api_port, url, "POST")
-        body = httpclient.get()
-        if body:
-            data = simplejson.loads(body)
-    except Exception, e:
-        LOG.error(e)
-        return NULL
-    return data
-"""
 
 if __name__ == "__main__":
     collection()
