@@ -13,7 +13,7 @@ import time
 from mana_collection import collection
 from mana_monitor import monitor
 from mana_alarm import alarm
-
+ 
 def start():
     DataCollection = threading.Thread(target = collection, name = "DataCollection")
     Monitor = threading.Thread(target = monitor, name = "Monitor")
