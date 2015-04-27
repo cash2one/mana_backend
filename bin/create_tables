@@ -1,0 +1,32 @@
+CREATE TABLE alarm(
+id int(10) unsigned NOT NULL AUTO_INCREMENT,
+name varchar(255) NOT NULL default '',
+description varchar(1024) NOT NULL default '',
+alarm_object varchar(255) NOT NULL,
+threshold float NOT NULL,
+cycletime  int(10) unsigned NOT NULL,
+collect_type enum('max', 'min','avg') default 'max',
+contrast   enum ('more', 'less') default 'more',
+contact_list int(10) unsigned NOT NULL,
+instance_id  varchar(36) NOT NULL,
+project varchar(36) NOT NULL,
+region varchar(255) NOT NULL,
+disable enum('0','1') default '0',
+PRIMARY KEY (id)  
+)ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE contact_list(
+id int(10) unsigned NOT NULL AUTO_INCREMENT,
+name varchar(255) NOT NULL default '',
+PRIMARY KEY (`id`)  
+)ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE contacts(
+id int(10) unsigned NOT NULL AUTO_INCREMENT,
+list_id int(10) NOT NULL,
+type enum ('EMAIL', 'SMS'),
+terminal  varchar(255) NOT NULL,
+PRIMARY KEY (`id`)  
+)ENGINE=MyISAM DEFAULT CHARSET=latin1;
