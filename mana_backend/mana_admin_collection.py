@@ -72,7 +72,8 @@ def _collection_datas(region, instance, alarm_obj, threshold):
         LOG.error(e)  
 
 def get_datas_from_api(region, instance_id, alarm_obj):
-    url = CONF.get('url').get('get_metric') %(region, alarm_obj, instance_id)
+    time = CONF.get('cycletime')
+    url = CONF.get('url').get('get_metric_url') %(region, alarm_obj, instance_id, time)
     api_host = CONF.get('api_host')
     api_port = CONF.get('api_port')
     try:
@@ -141,7 +142,7 @@ def get_instances_from_api(region):
     return instances 
 
 def get_datas_from_api(region, instance, alarm_obj):
-    url = CONF.get('url').get('get_metric') %(region, alarm_obj, instance)
+    url = CONF.get('url').get('get_metric_url') %(region, alarm_obj, instance)
     api_host = CONF.get('api_host')
     api_port = CONF.get('api_port')
     try:

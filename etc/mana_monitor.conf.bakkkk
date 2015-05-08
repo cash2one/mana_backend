@@ -6,7 +6,8 @@ regions = beijing,zhenru,Nanhui
 
 [url]
 get_all_instance_url = /api/virs_list/%s/
-get_metric = /api/statics/%s/%s/%s/3h/
+get_metric_url = /api/statics/%s/%s/%s/seconds/%s/
+get_task_url = /api/alarm/%s/%s/
 
 [alarm]
 #cpu_util = 10

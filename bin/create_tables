@@ -19,6 +19,7 @@ PRIMARY KEY (id)
 CREATE TABLE contact_list(
 id int(10) unsigned NOT NULL AUTO_INCREMENT,
 name varchar(255) NOT NULL default '',
+project varchar(36) NOT NULL,
 PRIMARY KEY (`id`)  
 )ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

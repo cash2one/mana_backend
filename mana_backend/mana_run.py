@@ -31,19 +31,19 @@ def start_Alarm_thread():
     Alarm.start()
 
 def start_Collection_threads():
-    Collection_min = threading.Thread(target = collection, name = "min", args = ("min", 5))
-    Collection_five_mins = threading.Thread(target = collection, name = "five_mins", args = ("five_mins", 30))
+    #Collection_min = threading.Thread(target = collection, name = "min", args = ("min", 60))
+    Collection_five_mins = threading.Thread(target = collection, name = "five_mins", args = ("five_mins", 300))
     #Collection_quarter_hour = threading.Thread(target = collection, name = "quarter_hour", args = ("quarter_hour", 10))
     #Collection_half_hour = threading.Thread(target = collection, name = "half_hour", args = ("half_hour", 15))
     #Collection_hour = threading.Thread(target = collection, name = "hour", args = ("hour", 20))
 
-    Collection_min.setDaemon(True)
+    #Collection_min.setDaemon(True)
     Collection_five_mins.setDaemon(True)
     #Collection_quarter_hour.setDaemon(True)
     #Collection_half_hour.setDaemon(True)
     #Collection_hour.setDaemon(True)
 
-    Collection_min.start()
+    #Collection_min.start()
     Collection_five_mins.start()
     #Collection_quarter_hour.start()
     #Collection_half_hour.start()

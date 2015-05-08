@@ -53,10 +53,10 @@ class period_task:
                 time_now = time.time()
                 monitor_time = time_now - time_pre
                 if monitor_time < self.interval:
-                    LOG.info("Thread:--%s-- work use time = %ss" %(self.name, monitor_time))
+                    #LOG.info("Thread:--%s-- work use time = %ss" %(self.name, monitor_time))
                     time.sleep(self.interval + time_pre - time_now)
                 else:
-                    pass
                     LOG.warn("Thread:--%s-- work use too long time = %ss" %(self.name, monitor_time))
+                    pass
             except Exception, e:
                 LOG.error(e)

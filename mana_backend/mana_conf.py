@@ -18,7 +18,8 @@ def Parser(config):
 
         url_dict = {}
         url_dict['get_all_instance_url'] = config.get('url', 'get_all_instance_url')
-        url_dict['get_metric'] = config.get('url', 'get_metric')
+        url_dict['get_metric_url'] = config.get('url', 'get_metric_url')
+        url_dict['get_task_url'] = config.get('url', 'get_task_url')
         conf['url'] = url_dict
 
 
