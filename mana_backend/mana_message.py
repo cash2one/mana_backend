@@ -10,7 +10,7 @@ from mana_http import UrlCon
 import urllib
 
 import mana_log
-LOG = mana_log.GetLog(__name__)
+LOG = mana_log.GetLog('alarm', __name__)
 
 
 class Email():

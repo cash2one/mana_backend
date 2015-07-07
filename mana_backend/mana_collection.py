@@ -6,7 +6,7 @@ import eventlet
 
 from mana_http import HttpCon
 import mana_log
-LOG = mana_log.GetLog(__name__)
+LOG = mana_log.GetLog('alarm', __name__)
 
 import  mana_conf
 CONF = mana_conf.GetConf()

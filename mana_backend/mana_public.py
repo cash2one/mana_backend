@@ -5,7 +5,7 @@ import Queue
 import time
 
 import mana_log
-LOG = mana_log.GetLog(__name__)
+LOG = mana_log.GetLog('alarm', __name__)
 
 DATA_QUEUE = Queue.Queue()
 ALARM_QUEUE = Queue.Queue()
